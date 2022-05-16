@@ -12,7 +12,7 @@
     },
     "ios.sim.release": {
       "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/reactDetox.app",
-      "build": "xcodebuild -workspace ios/reactDetox.xcworkspace -scheme reactDetox -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -UseModernBuildSystem=NO -quiet",
+      "build": "xcodebuild -workspace ios/reactDetox.xcworkspace -scheme reactDetox -configuration Release -sdk iphonesimulator -derivedDataPath ios/build -UseModernBuildSystem=NO -quiet",
       "type": "ios.simulator",
       "device": {
         "type": "iPhone 13"
