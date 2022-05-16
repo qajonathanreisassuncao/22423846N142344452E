@@ -50,6 +50,6 @@ jobs:
           cd ios && npx pod-install --quiet && cd ..
 
       - name: Run tests 
-        run: 
+        run: |
           npx detox build -c ios.sim.release --cleanup
           npm run cucumber
