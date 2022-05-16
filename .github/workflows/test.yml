@@ -1,0 +1,55 @@
+name: Detox_e2e
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests:
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+
+      - name: Prepare cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - uses: actions/cache@v2
+        with:
+          path: 'ios/Pods'
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      - name: Install Detox Dependencies
+        run: |
+          brew tap wix/brew
+          brew install applesimutils
+          npm install -g detox-cli --quiet
+      
+      - name: Install Pod Dependencies
+        run: |
+          gem update cocoapods xcodeproj
+          cd ios && pod install --quiet
+
+      - name: Run tests 
+        run: 
+          npx detox build -c ios.sim.release --cleanup &> detox_build.log
+          npm run cucumber

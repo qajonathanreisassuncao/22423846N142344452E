@@ -1,0 +1,22 @@
+{
+  "testRunner": "jest",
+  "runnerConfig": "e2e/config.json",
+  "configurations": {
+    "ios.sim.debug": {
+      "type": "ios.simulator",
+      "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/reactDetox.app",
+      "build": "xcodebuild -workspace ios/reactDetox.xcworkspace -scheme reactDetox -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build --quiet",
+      "device": {
+        "type": "iPhone 13"
+      }
+    },
+    "ios.sim.release": {
+      "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/reactDetox.app",
+      "build": "export RCT_NO_LAUNCH_PACKAGER=true && xcodebuild -workspace ios/reactDetox.xcworkspace -UseNewBuildSystem=YES -scheme reactDetox -configuration Release -sdk iphonesimulator -derivedDataPath ios/build --quiet",
+      "type": "ios.simulator",
+      "device": {
+        "type": "iPhone 13"
+      }
+    }
+  }
+}

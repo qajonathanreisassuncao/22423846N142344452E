@@ -1,0 +1,37 @@
+{
+  "name": "reactDetox",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint .",
+    "build:ios": "detox build -c ios.sim.release",
+    "test:ios": "detox test -c ios.sim.release",
+    "cucumber": "./node_modules/.bin/cucumber-js --tags @qa --require-module @babel/register ./cucumber/features/*.feature",
+    "detox:buildIosDebug": "DETOX_PLATFORM=ios DETOX_BUILD_FLAVOR=debug detox build",
+    "detox:buildIosRelease": "DETOX_PLATFORM=ios DETOX_BUILD_FLAVOR=release detox build"
+  },
+  "dependencies": {
+    "react": "17.0.2",
+    "react-native": "0.68.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.10",
+    "@babel/register": "^7.17.7",
+    "@babel/runtime": "^7.17.9",
+    "@cucumber/cucumber": "^8.2.1",
+    "@react-native-community/eslint-config": "^3.0.2",
+    "babel-jest": "^28.1.0",
+    "detox": "^19.6.9",
+    "eslint": "^8.15.0",
+    "jest": "^28.1.0",
+    "metro-react-native-babel-preset": "^0.70.3",
+    "react-test-renderer": "17.0.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
