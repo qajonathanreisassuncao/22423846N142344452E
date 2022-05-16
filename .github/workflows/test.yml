@@ -47,9 +47,9 @@ jobs:
       - name: Install Pod Dependencies
         run: |
           gem update cocoapods xcodeproj
-          cd ios && npx pod-install --quiet && cd ..
+          cd ios && npx pod-install --quiet
 
       - name: Run tests 
         run: |
-          npx detox build -c ios.sim.release --cleanup
+          npx detox build -c ios.sim.release --cleanup --silent
           npm run cucumber
