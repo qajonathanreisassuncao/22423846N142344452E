@@ -8,7 +8,7 @@ on:
 jobs:
   tests:
     runs-on: macos-latest
-    timeout-minutes: 60
+    timeout-minutes: 61
 
     steps:
       - name: Checkout Repository
