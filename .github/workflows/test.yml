@@ -3,7 +3,7 @@ name: Detox_e2e
 on:
   push:
     branches:
-      - main
+      - testPipeline
 
 jobs:
   tests:
