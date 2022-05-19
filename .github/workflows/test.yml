@@ -46,7 +46,7 @@ jobs:
       
       - name: Install Pod Dependencies
         run: |
-          gem update cocoapods xcodeproj
+          gem update cocoapods xcworkspace
           cd ios && npx pod-install --silent && cd -
 
       - name: Run tests 
