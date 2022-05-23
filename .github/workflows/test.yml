@@ -34,11 +34,8 @@ jobs:
 
     - name: Install Dependencies
       if: steps.cache.outputs.cache-hit != 'true'
-      run: yarn install --silent
-
-    - name: Rebuild detox
-      if: steps.cache.outputs.cache-hit == 'true'
-      run: yarn detox clean-framework-cache && yarn detox build-framework-cache
+      run: |
+        yarn install
 
     - name: Install Detox Dependencies
       run: |
@@ -48,9 +45,17 @@ jobs:
     - name: Update Pods
       run: |
         gem update cocoapods xcodeproj
-        cd ios && npx pod-install --silent && cd -
-    - run: yarn detox build -c ios.sim.release --cleanup --silent
+        cd ios && npx pod-install && cd -
 
-    - name: Run tests 
+    - name: Rebuild framwork cahe detox
+      if: steps.cache.outputs.cache-hit == 'true'
       run: |
-        yarn cucmber --silent
+        yarn detox clean-framework-cache && yarn detox build-framework-cache
+
+    - name: Build Detox
+      run: |
+        yarn detox build -s -c ios.sim.release --cleanup
+
+    - name: Run tests Cucumber
+      run: |
+        yarn cucmber
