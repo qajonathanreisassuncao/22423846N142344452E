@@ -34,7 +34,7 @@ jobs:
 
     - name: Install Dependencies
       if: steps.cache.outputs.cache-hit != 'true'
-      run: yarn install
+      run: yarn install --silent
 
     - name: Cache Pods
       uses: actions/cache@v1
@@ -46,8 +46,8 @@ jobs:
     - name: Update Pods
       run: |
         gem update cocoapods xcodeproj
-        cd ios && pod install && cd ..
+        cd ios && npx pod-install --silent && cd -
     - run: brew tap wix/brew
-    - run: brew install applesimutils
+    - run: brew install applesimutils --silent
     - run: yarn detox build -c ios.sim.release --cleanup
-    - run: yarn cucmber
+    - run: yarn cucmber --silent
