@@ -8,7 +8,7 @@ on:
 jobs:
   tests:
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: 60
 
     steps:
       - name: Checkout Repository
@@ -51,5 +51,5 @@ jobs:
 
       - name: Run tests 
         run: |
-          npx detox build -s -c ios.sim.release --cleanup 
+          npx detox build -s -c ios.sim.release --cleanup --loglevel fatal
           npm run cucumber
