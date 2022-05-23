@@ -41,9 +41,9 @@ jobs:
       run: yarn detox clean-framework-cache && yarn detox build-framework-cache
 
     - name: Install Detox Dependencies
-        run: |
-          brew tap wix/brew
-          brew install applesimutils --silent
+      run: |
+        brew tap wix/brew
+        brew install applesimutils --silent
 
     - name: Update Pods
       run: |
