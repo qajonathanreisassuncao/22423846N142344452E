@@ -1,53 +1,56 @@
-name: iOS
+name: Detox_e2e_iOS
 
 on: [push]
 
 jobs:
-  build:
+  tests:
     runs-on: macos-latest
     timeout-minutes: 15
 
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_11.2.app
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v1
+    - name: Checkout Repository
+      uses: actions/checkout@v2
       with:
         fetch-depth: 1
 
-    - name: Node
+    - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
         node-version: "14.x"
 
     - name: Cache node modules
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       id: cache
       with:
         path: node_modules
         key: node-modules-${{ hashFiles('**/yarn.lock') }}
 
-    - name: Rebuild detox
-      if: steps.cache.outputs.cache-hit == 'true'
-      run: yarn detox clean-framework-cache && yarn detox build-framework-cache
-
-    - name: Install Dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: yarn install --silent
-
     - name: Cache Pods
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       id: podcache
       with:
         path: ios/Pods
         key: pods-${{ hashFiles('**/Podfile.lock') }}
 
+    - name: Install Dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: yarn install --silent
+
+    - name: Rebuild detox
+      if: steps.cache.outputs.cache-hit == 'true'
+      run: yarn detox clean-framework-cache && yarn detox build-framework-cache
+
+    - name: Install Detox Dependencies
+        run: |
+          brew tap wix/brew
+          brew install applesimutils --silent
+
     - name: Update Pods
       run: |
         gem update cocoapods xcodeproj
         cd ios && npx pod-install --silent && cd -
-    - run: brew tap wix/brew
-    - run: brew install applesimutils --silent
-    - run: yarn detox build -c ios.sim.release --cleanup
-    - run: yarn cucmber --silent
+    - run: yarn detox build -c ios.sim.release --cleanup --silent
+
+    - name: Run tests 
+      run: |
+        yarn cucmber --silent
