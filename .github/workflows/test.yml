@@ -2,8 +2,8 @@ name: Detox_e2e
 
 on:
   push:
-    branches:
-      - testPipeline
+    branches-ignore:
+    - '**'
 
 jobs:
   tests:
