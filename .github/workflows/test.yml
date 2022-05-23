@@ -2,20 +2,20 @@ name: Detox_e2e
 
 on:
   push:
-    branches:
-      - main
+    branches-ignore:
+    - '**'
 
 jobs:
   tests:
     runs-on: macos-latest
-    timeout-minutes: 61
+    timeout-minutes: 60
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: "14.x"
 
@@ -42,7 +42,7 @@ jobs:
         run: |
           brew tap wix/brew
           brew install applesimutils
-          npm install -g detox-cli --quiet
+          npm install -q -g detox-cli
       
       - name: Install Pod Dependencies
         run: |
@@ -51,5 +51,5 @@ jobs:
 
       - name: Run tests 
         run: |
-          npx detox build -c ios.sim.release --cleanup --silent
+          npx detox build -s -c ios.sim.release --cleanup --loglevel fatal
           npm run cucumber
