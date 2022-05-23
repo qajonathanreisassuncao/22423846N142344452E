@@ -1,55 +1,52 @@
-name: Detox_e2e
+name: iOS
 
-on:
-  push:
-    branches:
-      - testPipeline
+on: [push]
 
 jobs:
-  tests:
+  build:
     runs-on: macos-latest
-    timeout-minutes: 61
+    timeout-minutes: 15
+
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_11.2.app
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: "14.x"
+    - name: Node
+      uses: actions/setup-node@v1
 
-      - name: Prepare cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+    - name: Cache node modules
+      uses: actions/cache@v1
+      id: cache
+      with:
+        path: node_modules
+        key: node-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - uses: actions/cache@v2
-        with:
-          path: 'ios/Pods'
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
+    - name: Rebuild detox
+      if: steps.cache.outputs.cache-hit == 'true'
+      run: yarn detox clean-framework-cache && yarn detox build-framework-cache
 
-      - name: Install dependencies
-        run: |
-          npm ci
+    - name: Install Dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: yarn install
 
-      - name: Install Detox Dependencies
-        run: |
-          brew tap wix/brew
-          brew install applesimutils
-          npm install -g detox-cli --quiet
-      
-      - name: Install Pod Dependencies
-        run: |
-          gem update cocoapods xcworkspace
-          cd ios && npx pod-install --silent && cd -
+    - name: Cache Pods
+      uses: actions/cache@v1
+      id: podcache
+      with:
+        path: ios/Pods
+        key: pods-${{ hashFiles('**/Podfile.lock') }}
 
-      - name: Run tests 
-        run: |
-          npx detox build -c ios.sim.release --cleanup --silent
-          npm run cucumber
+    - name: Update Pods
+      run: |
+        gem update cocoapods xcodeproj
+        cd ios && pod install && cd ..
+    - run: brew tap wix/brew
+    - run: brew install applesimutils
+    - run: yarn detox build e2e --configuration ios.sim.release
+    - run: yarn detox test e2e --configuration ios.sim.release --cleanup --debug-synchronization 200
+    - run: yarn cucmber
