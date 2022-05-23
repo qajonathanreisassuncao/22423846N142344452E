@@ -43,7 +43,7 @@ jobs:
     - name: Install Detox Dependencies
       run: |
         brew tap wix/brew
-        brew install applesimutils --silent
+        brew install applesimutils
 
     - name: Update Pods
       run: |
